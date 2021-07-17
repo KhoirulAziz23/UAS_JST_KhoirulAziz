@@ -6,7 +6,7 @@ const model = require('./sdk/model.js');
 
 // Bot Setting
 const TelegramBot = require('node-telegram-bot-api');
-const token = '1809296672:AAGh81AFbdiKC8kLRt8XKHgIn_C4O9oy214'
+const token = '1898140927:AAF5Bu-mp6I_U-Q1h94xiGE7waSYuYj0FhI'
 const bot = new TelegramBot(token, {polling: true});
 
 
@@ -25,7 +25,7 @@ state = 0;
 bot.onText(/\/predict/, (msg) => {
     bot.sendMessage(
         msg.chat.id,
-        'Masukan Nilai X|Y|Z , contoh 39.588|-33.474|-220.645'
+        'Masukan Nilai X1|X2|X3 , contoh 23.967|-31.948|-260.135'
     );
     state = 1;
 });
@@ -33,9 +33,9 @@ bot.onText(/\/predict/, (msg) => {
 bot.on('message', (msg) => {
     if(state == 1){
         s = msg.text.split("|");
-        x = s[0]
-        y = s[1]
-        z = s[2]
+        x1 = s[0]
+        x2 = s[1]
+        x3 = s[2]
         model.predict(
             [
                 parseFloat(s[0]), //string to float
@@ -45,18 +45,18 @@ bot.on('message', (msg) => {
        ).then((jres)=>{
             bot.sendMessage(
                 msg.chat.id,
-                `Nilai M1 yang Di Prediksi adalah ${jres[0]}`
+                `Nilai y1 yang Di Prediksi adalah ${jres[0]}`
             );
             
             bot.sendMessage(
                 msg.chat.id,
-                `Nilai M2 yang Di Prediksi adalah ${jres[1]}`
+                `Nilai y2 yang Di Prediksi adalah ${jres[1]}`
             );
             
             
             bot.sendMessage(
                 msg.chat.id,
-                `Nilai M3 yang Di Prediksi adalah ${jres[2]}`
+                `Nilai y3 yang Di Prediksi adalah ${jres[2]}`
             );
         })
     }else{
@@ -68,9 +68,9 @@ bot.on('message', (msg) => {
 r.get('/prediction/:x/:y/:z', function(req, res, next) {    
     model.predict(
         [
-            parseFloat(req.params.x), // string to float
-            parseFloat(req.params.y),
-            parseFloat(req.params.z)
+            parseFloat(req.params.x1), // string to float
+            parseFloat(req.params.x2),
+            parseFloat(req.params.x3z)
         ]
     ).then((jres)=>{
         res.json(jres);
